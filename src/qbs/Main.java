@@ -5,14 +5,75 @@ import java.nio.file.Files;
 
 public class Main {
 
+	/*TODO:
+	   *search for all files with given extention and replaces bytes in those
+	   *search for files in subfolders also
+	   *maybe add something if bytes were not found
+	*/
+	static void replaceBytes(File file, String replaceBytes, String toBeReplacedBytes){
+		//get byte array of a file
+		try {
+			byte[] fileBytes = Files.readAllBytes(file.toPath());
+			String bytesAsString = "";
+
+			//print those bytes
+			/*for(byte b:fileBytes){
+				String s = String.valueOf(b);
+				System.out.print(s + " ");
+			}*/
+
+			//change them into string with spaces in between bytes
+			for(byte b:fileBytes){
+				String s = String.valueOf(b);
+				bytesAsString = bytesAsString.concat(s + " ");
+			}
+
+			//replace bytes as strings
+			bytesAsString = bytesAsString.replaceAll(replaceBytes, toBeReplacedBytes);
+			String[] oneByte = bytesAsString.split(" ");
+
+			//parse strings as bytes
+			for(int i=0;i<oneByte.length;i++) {
+				try {
+					fileBytes[i] = Byte.parseByte(oneByte[i], 10);//handle exception too big number
+				}
+				catch (NumberFormatException e){
+					System.out.println(e);
+					System.out.println("Will not be replaced");
+				}
+			}
+			//put the replaced bytes into the file
+			OutputStream os = new FileOutputStream(file);
+
+			os.write(fileBytes);
+			System.out.println("Byte replacement succesfull");
+
+			os.close();
+
+			//debug:
+			//System.out.println(bytesAsString);
+			//byte decByte = Byte.parseByte(oneByte[0], 10);
+			/*for(String s:oneByte){
+				System.out.print(s + "&");
+			}*/
+			//System.out.println(decByte);
+		}
+		catch(IOException e){
+			System.out.println(e);
+		}
+	}
+
     public static void main(String[] args) {
     	//input from user
 	    Scanner scan = new Scanner(System.in);
+
 	    System.out.println("Wpisz sciezke folderu, rozszerzenie, ciag bitow 1 ciag bitow 2");
 	    String pathToDir = scan.nextLine();
 	    String extention = scan.nextLine();
 	    String replaceBytes = scan.nextLine();
 	    String toBeReplacedBytes = scan.nextLine();
+
+	    scan.close();
 
 		//find folder (for testing dir is now a file, later make a list of files with the same extention)
 	    File dir = new File(pathToDir);
@@ -29,21 +90,9 @@ public class Main {
 			System.out.println(name);
 		*/
 
-		//get byte array of a file
-		try {
-			byte[] fileBytes = Files.readAllBytes(dir.toPath());
-
-			/*//print those bytes
-			for(byte b:fileBytes){
-				String s = String.valueOf(b);
-				System.out.print(s + " ");
-			}*/
-		}
-		catch(IOException e){
-			System.out.println("Error reading bytes from file");
-		}
+		replaceBytes(dir, replaceBytes, toBeReplacedBytes);
 
 		//debug check input
-	    //System.out.printf("%s, %s, %s, %s", folder, extention, replaceBytes, toBeReplacedBytes);
+	    //System.out.printf("%s, %s, %s, %s", pathToDir, extention, replaceBytes, toBeReplacedBytes);
     }
 }
