@@ -6,61 +6,62 @@ import java.nio.file.Files;
 public class Main {
 
 	/*TODO:
-	   *search for all files with given extention and replaces bytes in those
 	   *search for files in subfolders also
 	   *maybe add something if bytes were not found
 	*/
-	static void replaceBytes(File file, String replaceBytes, String toBeReplacedBytes){
-		//get byte array of a file
-		try {
-			byte[] fileBytes = Files.readAllBytes(file.toPath());
-			String bytesAsString = "";
+	static void replaceBytes(File[] files, String replaceBytes, String toBeReplacedBytes){
+		//get byte array for each file
+		int noOfFiles = 0;
+		for(File file:files) {
+			try {
+				byte[] fileBytes = Files.readAllBytes(file.toPath());
+				String bytesAsString = "";
 
-			//print those bytes
+				//print those bytes
 			/*for(byte b:fileBytes){
 				String s = String.valueOf(b);
 				System.out.print(s + " ");
 			}*/
 
-			//change them into string with spaces in between bytes
-			for(byte b:fileBytes){
-				String s = String.valueOf(b);
-				bytesAsString = bytesAsString.concat(s + " ");
-			}
-
-			//replace bytes as strings
-			bytesAsString = bytesAsString.replaceAll(replaceBytes, toBeReplacedBytes);
-			String[] oneByte = bytesAsString.split(" ");
-
-			//parse strings as bytes
-			for(int i=0;i<oneByte.length;i++) {
-				try {
-					fileBytes[i] = Byte.parseByte(oneByte[i], 10);//handle exception too big number
+				//change them into string with spaces in between bytes
+				for (byte b : fileBytes) {
+					String s = String.valueOf(b);
+					bytesAsString = bytesAsString.concat(s + " ");
 				}
-				catch (NumberFormatException e){
-					System.out.println(e);
-					System.out.println("Will not be replaced");
+
+				//replace bytes as strings
+				bytesAsString = bytesAsString.replaceAll(replaceBytes, toBeReplacedBytes);
+				String[] oneByte = bytesAsString.split(" ");
+
+				//parse strings as bytes
+				for (int i = 0; i < oneByte.length; i++) {
+					try {
+						fileBytes[i] = Byte.parseByte(oneByte[i], 10);//handle exception too big number
+					} catch (NumberFormatException e) {
+						System.out.println(e);
+						System.out.println("Will not be replaced");
+					}
 				}
-			}
-			//put the replaced bytes into the file
-			OutputStream os = new FileOutputStream(file);
+				//put the replaced bytes into the file
+				OutputStream os = new FileOutputStream(file);
 
-			os.write(fileBytes);
-			System.out.println("Byte replacement succesfull");
+				os.write(fileBytes);
+				noOfFiles ++;
 
-			os.close();
+				os.close();
 
-			//debug:
-			//System.out.println(bytesAsString);
-			//byte decByte = Byte.parseByte(oneByte[0], 10);
+				//debug:
+				//System.out.println(bytesAsString);
+				//byte decByte = Byte.parseByte(oneByte[0], 10);
 			/*for(String s:oneByte){
 				System.out.print(s + "&");
 			}*/
-			//System.out.println(decByte);
+				//System.out.println(decByte);
+			} catch (IOException e) {
+				System.out.println(e);
+			}
 		}
-		catch(IOException e){
-			System.out.println(e);
-		}
+		System.out.println("Byte replacement succesfull for " + noOfFiles + " files");
 	}
 
     public static void main(String[] args) {
@@ -75,7 +76,7 @@ public class Main {
 
 	    scan.close();
 
-		//find folder (for testing dir is now a file, later make a list of files with the same extention)
+		//find folder
 	    File dir = new File(pathToDir);
 	    if(dir.exists())
 	    	System.out.println("folder found");
@@ -83,14 +84,14 @@ public class Main {
 	    	System.out.println("not found");
 
 	    //find files with given extention
-		/*ExtentionFilter extFilter = new ExtentionFilter(extention);
-		String[] filesWithExt;
-		filesWithExt = dir.list(extFilter);
-		for(String name:filesWithExt)
-			System.out.println(name);
-		*/
+		ExtentionFilter extFilter = new ExtentionFilter(extention);
+		File[] filesWithExt;
+		filesWithExt = dir.listFiles(extFilter);
 
-		replaceBytes(dir, replaceBytes, toBeReplacedBytes);
+		/*for(int i=0;i<filesWithExt.length;i++)
+			System.out.println(filesWithExt[i].getName());*/
+
+		replaceBytes(filesWithExt, replaceBytes, toBeReplacedBytes);
 
 		//debug check input
 	    //System.out.printf("%s, %s, %s, %s", pathToDir, extention, replaceBytes, toBeReplacedBytes);

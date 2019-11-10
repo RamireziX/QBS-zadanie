@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b95cce89-c42f-4de9-a129-9b5bd138d7d7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/QBS-zadanie/qbs/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/QBS-zadanie/qbs/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/qbs/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/qbs/Main.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
