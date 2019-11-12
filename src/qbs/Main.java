@@ -6,22 +6,15 @@ import java.nio.file.Files;
 public class Main {
 
 	/*TODO:
-	   *search for files in subfolders also
-	   *maybe add something if bytes were not found
+	   wrap up
 	*/
-	static void replaceBytes(File[] files, String replaceBytes, String toBeReplacedBytes){
-		//get byte array for each file
-		int noOfFiles = 0;
+	//replace bytes in given files
+	static void replaceBytes(List<File> files, String replaceBytes, String toBeReplacedBytes){
 		for(File file:files) {
 			try {
+				//get bytes from 1 file
 				byte[] fileBytes = Files.readAllBytes(file.toPath());
 				String bytesAsString = "";
-
-				//print those bytes
-			/*for(byte b:fileBytes){
-				String s = String.valueOf(b);
-				System.out.print(s + " ");
-			}*/
 
 				//change them into string with spaces in between bytes
 				for (byte b : fileBytes) {
@@ -29,7 +22,7 @@ public class Main {
 					bytesAsString = bytesAsString.concat(s + " ");
 				}
 
-				//replace bytes as strings
+				//replace bytes
 				bytesAsString = bytesAsString.replaceAll(replaceBytes, toBeReplacedBytes);
 				String[] oneByte = bytesAsString.split(" ");
 
@@ -44,24 +37,34 @@ public class Main {
 				}
 				//put the replaced bytes into the file
 				OutputStream os = new FileOutputStream(file);
-
 				os.write(fileBytes);
-				noOfFiles ++;
-
 				os.close();
 
-				//debug:
-				//System.out.println(bytesAsString);
-				//byte decByte = Byte.parseByte(oneByte[0], 10);
-			/*for(String s:oneByte){
-				System.out.print(s + "&");
-			}*/
-				//System.out.println(decByte);
 			} catch (IOException e) {
 				System.out.println(e);
 			}
 		}
-		System.out.println("Byte replacement succesfull for " + noOfFiles + " files");
+	}
+
+	//returns array of files with given extention
+	static List<File> findFilesByExt(ExtentionFilter extFilter, File mainDir){
+		File[] allFilesAndDirs;
+		File[] tempFiles;
+		List<File> filesWithExt = new ArrayList<>();
+
+		allFilesAndDirs = mainDir.listFiles();
+		tempFiles = mainDir.listFiles(extFilter);
+
+		filesWithExt.addAll(Arrays.asList(tempFiles));
+
+		//look if a file or dir
+		for (File file : allFilesAndDirs) {
+			//if dir, look for files in that dir
+			 if (file.isDirectory()) {
+				filesWithExt.addAll(findFilesByExt(extFilter, file));
+			}
+		}
+		return filesWithExt;
 	}
 
     public static void main(String[] args) {
@@ -76,6 +79,9 @@ public class Main {
 
 	    scan.close();
 
+	    //create filter
+		ExtentionFilter extFilter = new ExtentionFilter(extention);
+
 		//find folder
 	    File dir = new File(pathToDir);
 	    if(dir.exists())
@@ -83,17 +89,7 @@ public class Main {
 	    else
 	    	System.out.println("not found");
 
-	    //find files with given extention
-		ExtentionFilter extFilter = new ExtentionFilter(extention);
-		File[] filesWithExt;
-		filesWithExt = dir.listFiles(extFilter);
-
-		/*for(int i=0;i<filesWithExt.length;i++)
-			System.out.println(filesWithExt[i].getName());*/
-
-		replaceBytes(filesWithExt, replaceBytes, toBeReplacedBytes);
-
-		//debug check input
-	    //System.out.printf("%s, %s, %s, %s", pathToDir, extention, replaceBytes, toBeReplacedBytes);
+		//replace bytes
+		replaceBytes(findFilesByExt(extFilter, dir), replaceBytes, toBeReplacedBytes);
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b95cce89-c42f-4de9-a129-9b5bd138d7d7" name="Default Changelist" comment="">
+    <list default="true" id="b95cce89-c42f-4de9-a129-9b5bd138d7d7" name="Default Changelist" comment="Add replace in all files in subfolders&#10;&#10;add replacing bytes in all files in all subfolders with given ext">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/qbs/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/qbs/Main.java" afterDir="false" />
     </list>
@@ -29,6 +29,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="last_opened_file_path" value="$USER_HOME$/Desktop/spring/1/gs-rest-service/complete/build.gradle" />
   </component>
   <component name="RunDashboard">
@@ -85,5 +86,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add replace in all files in subfolders&#10;&#10;add replacing bytes in all files in all subfolders with given ext" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add replace in all files in subfolders&#10;&#10;add replacing bytes in all files in all subfolders with given ext" />
   </component>
 </project>
