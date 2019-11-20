@@ -5,9 +5,6 @@ import java.nio.file.Files;
 
 public class Main {
 
-	/*TODO:
-	   add something if user inputs wrong extention (without .) or wrong bytes
-	*/
 	//replace bytes in given files
 	static void replaceBytes(List<File> files, String replaceBytes, String toBeReplacedBytes){
 		System.out.println("Replacing bytes in these files:");
@@ -32,18 +29,13 @@ public class Main {
 					//does not contain this byte pattern, skip
 					continue;
 
-				//put spaces in between bytes
+				//put each byte separately in array
 					String[] oneByte = bytesAsString.split(" ");
 
 				//parse strings as bytes
-				for (int i = 0; i < oneByte.length; i++) {
-					try {
-						fileBytes[i] = Byte.parseByte(oneByte[i], 10);//handle exception too big number
-					} catch (NumberFormatException e) {
-						System.out.println(e);
-						System.out.println("Will not be replaced");
-					}
-				}
+				for (int i = 0; i < oneByte.length; i++)
+						fileBytes[i] = Byte.parseByte(oneByte[i], 10);
+
 				//put the replaced bytes into the file
 				OutputStream os = new FileOutputStream(file);
 				os.write(fileBytes);
@@ -72,7 +64,7 @@ public class Main {
 
 		//look if a file or dir
 		for (File file : allFilesAndDirs) {
-			//if dir, look for files in that dir
+			//if file is dir, look for files in that dir
 			 if (file.isDirectory()) {
 				filesWithExt.addAll(findFilesByExt(extFilter, file));
 			}
@@ -95,6 +87,24 @@ public class Main {
 		}
 	}
 
+	//checks if extention is in correct format
+	static String correctExt(String extention, Scanner scan){
+		//make sure extention is not empty
+		try {
+			if (extention.charAt(0) != '.') {
+				String dot = ".";
+				extention = dot.concat(extention);
+			}
+		}catch (StringIndexOutOfBoundsException e){
+				System.out.println("extention empty!");
+			System.out.println("Write extention (.your_extention) and press enter:");
+			extention = scan.nextLine();
+			return correctExt(extention, scan);
+		}
+
+		return extention;
+	}
+
     public static void main(String[] args) {
     	//input from user
 	    Scanner scan = new Scanner(System.in);
@@ -108,8 +118,8 @@ public class Main {
 		System.out.println("Write bytes you want to switch previously found bytes (in decimal, separate each byte by space) and press enter:");
 	    String toBeReplacedBytes = scan.nextLine();
 
-	    //create filter
-		ExtentionFilter extFilter = new ExtentionFilter(extention);
+		//create filter
+		ExtentionFilter extFilter = new ExtentionFilter(correctExt(extention, scan));
 
 		//look for folder
 		File dir = folderExists(pathToDir, scan);
